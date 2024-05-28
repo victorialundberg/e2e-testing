@@ -1,50 +1,6 @@
 import { IMovie } from "../../src/ts/models/Movie";
 
 describe("main tests", () => {
-  const movies: IMovie[] = [
-    {
-      Title: "B",
-      imdbID: "idB",
-      Type: "typeB",
-      Poster: "posterB",
-      Year: "yearB",
-    },
-    {
-      Title: "A",
-      imdbID: "idA",
-      Type: "typeA",
-      Poster: "posterA",
-      Year: "yearA",
-    },
-    {
-      Title: "F",
-      imdbID: "idF",
-      Type: "typeF",
-      Poster: "posterF",
-      Year: "yearF",
-    },
-    {
-      Title: "C",
-      imdbID: "idC",
-      Type: "typeC",
-      Poster: "posterC",
-      Year: "yearC",
-    },
-    {
-      Title: "E",
-      imdbID: "idE",
-      Type: "typE",
-      Poster: "posterE",
-      Year: "yearE",
-    },
-    {
-      Title: "F",
-      imdbID: "idD",
-      Type: "typeD",
-      Poster: "posterD",
-      Year: "yearD",
-    },
-  ];
   beforeEach(() => {
     cy.visit("/");
   });
@@ -94,5 +50,23 @@ describe("main tests", () => {
     cy.get("div#movie-container > div > h3")
       .eq(1)
       .should("have.text", "Frozen II");
+  });
+
+  it("should get one or more movies from mocked list when searching with a value", () => {
+    cy.intercept("http://omdbapi.com/?apikey=416ed51a&s=*", {
+      Search: [
+        {
+          Title: "B",
+          imdbID: "idB",
+          Type: "typeB",
+          Poster: "posterB",
+          Year: "yearB",
+        },
+      ],
+    });
+
+    cy.get("input#searchText").type("B");
+    cy.get("button#search").click();
+    cy.get("div#movie-container > div > h3").eq(0).should("have.text", "B");
   });
 });
