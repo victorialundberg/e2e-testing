@@ -37,7 +37,6 @@ describe("main tests", () => {
     );
   });
 
-  // Note to self  update after implementing sorting function
   it("should by default sort movies in descending order", () => {
     // Act
     cy.get("input#searchText").type("Frozen");
@@ -49,24 +48,79 @@ describe("main tests", () => {
       .should("have.text", "Frozen");
     cy.get("div#movie-container > div > h3")
       .eq(1)
-      .should("have.text", "Frozen II");
+      .should("have.text", "Frozen");
+    cy.get("div#movie-container > div > h3")
+      .eq(2)
+      .should("have.text", "Frozen Fever");
   });
 
-  it("should get one or more movies from mocked list when searching with a value", () => {
+  it("should get one or more movies from mocked list when searching with a value, all sorted", () => {
     cy.intercept("http://omdbapi.com/?apikey=416ed51a&s=*", {
       Search: [
         {
-          Title: "B",
+          Title: "Movie B",
           imdbID: "idB",
           Type: "typeB",
           Poster: "posterB",
           Year: "yearB",
         },
+        {
+          Title: "Movie A",
+          imdbID: "idA",
+          Type: "typeA",
+          Poster: "posterA",
+          Year: "yearA",
+        },
+        {
+          Title: "Movie F",
+          imdbID: "idF",
+          Type: "typeF",
+          Poster: "posterF",
+          Year: "yearF",
+        },
+        {
+          Title: "Movie C",
+          imdbID: "idC",
+          Type: "typeC",
+          Poster: "posterC",
+          Year: "yearC",
+        },
+        {
+          Title: "Movie E",
+          imdbID: "idE",
+          Type: "typE",
+          Poster: "posterE",
+          Year: "yearE",
+        },
+        {
+          Title: "Movie F",
+          imdbID: "idD",
+          Type: "typeD",
+          Poster: "posterD",
+          Year: "yearD",
+        },
       ],
     });
 
-    cy.get("input#searchText").type("B");
+    cy.get("input#searchText").type("Movie");
     cy.get("button#search").click();
-    cy.get("div#movie-container > div > h3").eq(0).should("have.text", "B");
+    cy.get("div#movie-container > div > h3")
+      .eq(0)
+      .should("have.text", "Movie A");
+    cy.get("div#movie-container > div > h3")
+      .eq(1)
+      .should("have.text", "Movie B");
+    cy.get("div#movie-container > div > h3")
+      .eq(2)
+      .should("have.text", "Movie C");
+    cy.get("div#movie-container > div > h3")
+      .eq(3)
+      .should("have.text", "Movie E");
+    cy.get("div#movie-container > div > h3")
+      .eq(4)
+      .should("have.text", "Movie F");
+    cy.get("div#movie-container > div > h3")
+      .eq(5)
+      .should("have.text", "Movie F");
   });
 });
