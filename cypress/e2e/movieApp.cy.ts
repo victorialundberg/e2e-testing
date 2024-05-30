@@ -53,7 +53,6 @@ describe("main tests", () => {
       .eq(2)
       .should("have.text", "Frozen Fever");
   });
-
   it("should get one or more movies from mocked list when searching with a value, all sorted", () => {
     cy.intercept("http://omdbapi.com/?apikey=416ed51a&s=*", {
       Search: [
@@ -122,5 +121,17 @@ describe("main tests", () => {
     cy.get("div#movie-container > div > h3")
       .eq(5)
       .should("have.text", "Movie F");
+  });
+  it("should display error when respons from api fails", () => {
+    cy.intercept("GET", "http://omdbapi.com/?apikey=416ed51a&s=*", {
+      statusCode: 500,
+    }),
+      cy.get("input#searchText").type("Frozen");
+    cy.get("button#search").click();
+
+    cy.get("div#movie-container > p").should(
+      "have.text",
+      "Inga sökresultat att visa"
+    );
   });
 });
