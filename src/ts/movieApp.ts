@@ -1,3 +1,4 @@
+// import { movieSort } from "./functions";
 import { movieSort } from "./functions";
 import { IMovie } from "./models/Movie";
 import { getData } from "./services/movieService";
@@ -35,9 +36,20 @@ export async function handleSubmit() {
 }
 
 export const createHtml = (movies: IMovie[], container: HTMLDivElement) => {
-  for (let i = 0; i < movies.length; i++) {
-    movieSort(movies);
+  container.innerHTML = "";
 
+  const sortingBtn = document.createElement("button");
+  sortingBtn.innerText = "Sortera på namn";
+  sortingBtn.setAttribute("id", "sort");
+
+  container.appendChild(sortingBtn);
+
+  sortingBtn.addEventListener("click", () => {
+    const sortedMovies = movieSort(movies, true);
+    createHtml(sortedMovies, container);
+  });
+
+  for (let i = 0; i < movies.length; i++) {
     let movie = document.createElement("div");
     let title = document.createElement("h3");
     let img = document.createElement("img");

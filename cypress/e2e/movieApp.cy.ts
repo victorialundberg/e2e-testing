@@ -37,10 +37,24 @@ describe("main tests", () => {
     );
   });
 
-  it("should by default sort movies in descending order", () => {
+  it("should sort movies in descending order when button is clicked", () => {
     // Act
     cy.get("input#searchText").type("Frozen");
     cy.get("button#search").click();
+
+    // Assert
+    cy.get("div#movie-container > div > h3")
+      .eq(0)
+      .should("have.text", "Frozen");
+    cy.get("div#movie-container > div > h3")
+      .eq(1)
+      .should("have.text", "Frozen II");
+    cy.get("div#movie-container > div > h3")
+      .eq(2)
+      .should("have.text", "Frozen");
+
+    // Act
+    cy.get("button#sort").click();
 
     // Assert
     cy.get("div#movie-container > div > h3")
@@ -53,7 +67,7 @@ describe("main tests", () => {
       .eq(2)
       .should("have.text", "Frozen Fever");
   });
-  it("should get one or more movies from mocked list when searching with a value, all sorted", () => {
+  it("should get one or more movies from mocked list when searching with a value", () => {
     cy.intercept("http://omdbapi.com/?apikey=416ed51a&s=*", {
       Search: [
         {
@@ -105,19 +119,19 @@ describe("main tests", () => {
     cy.get("button#search").click();
     cy.get("div#movie-container > div > h3")
       .eq(0)
-      .should("have.text", "Movie A");
-    cy.get("div#movie-container > div > h3")
-      .eq(1)
       .should("have.text", "Movie B");
     cy.get("div#movie-container > div > h3")
+      .eq(1)
+      .should("have.text", "Movie A");
+    cy.get("div#movie-container > div > h3")
       .eq(2)
-      .should("have.text", "Movie C");
+      .should("have.text", "Movie F");
     cy.get("div#movie-container > div > h3")
       .eq(3)
-      .should("have.text", "Movie E");
+      .should("have.text", "Movie C");
     cy.get("div#movie-container > div > h3")
       .eq(4)
-      .should("have.text", "Movie F");
+      .should("have.text", "Movie E");
     cy.get("div#movie-container > div > h3")
       .eq(5)
       .should("have.text", "Movie F");
